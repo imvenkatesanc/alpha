@@ -16,9 +16,6 @@ public interface UserService {
     // Retrieves a user by username
     User findOne(String username);
 
-    // Creates an employee
-    User createEmployee(UserDto user);
-
     // Returns admin dashboard message
     User getAdminDashboard();
 
@@ -28,6 +25,10 @@ public interface UserService {
     // Deletes a user by username
     String deleteUser(String username);
 
+    User getUserById(Long id) throws Exception;
+
     // Updates current user's profile
     User updateUserProfile(UserDto user);
+
+    User findByUsername(String username);
 }

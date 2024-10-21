@@ -1,9 +1,11 @@
 package com.alpha.model;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 
 @Entity
-public class Role {
+public class Role implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -14,6 +16,11 @@ public class Role {
 
     @Column
     private String description;
+
+    @Override
+    public String getAuthority() {
+        return name; // This should return the role name, e.g., "ROLE_ADMIN"
+    }
 
     // Getter for id
     public long getId() {

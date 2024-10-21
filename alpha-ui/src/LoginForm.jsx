@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
+import Navigation from './Navigation';
+import logo from './assets/pms_logo.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignInAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');
@@ -19,9 +23,11 @@ const LoginForm = () => {
 
             const receivedToken = response.data.token;
             const userRole = response.data.role; // Retrieve role from the response (ROLE_ADMIN or ROLE_USER)
+            const userId = response.data.userId;
 
             localStorage.setItem('authToken', receivedToken);
             localStorage.setItem('userRole', userRole); // Save role to localStorage
+            localStorage.setItem('userId', userId);
 
             // Redirect to the dashboard
             navigate('/dashboard');
@@ -31,33 +37,47 @@ const LoginForm = () => {
     };
 
     return (
-        <div className="login-container">
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="username">Username:</label>
+        <>
+        {/* <Navigation/> */}
+        <div className="auth-container">
+            <div className="auth-card">
+                <div className="auth-header">
+                    <img src={logo} alt="Logo" className="auth-logo" />
+                    <h2 className='auth-title'>Welcome to PMS</h2>
+                    <h3 className="auth-title">
+                        <FontAwesomeIcon className='fa-user' icon={faUser} />
+                    </h3>
+                </div>
+                <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        id="username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Username"
+                        className="auth-input"
+                        aria-label="Username"
                         required
                     />
-                </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
                     <input
                         type="password"
-                        id="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Password"
+                        className="auth-input"
+                        aria-label="Password"
                         required
                     />
-                </div>
-                <button type="submit">Login</button>
-            </form>
-            {error && <p className="error">{error}</p>}
+                    <button type="submit" className="auth-button">
+                        <FontAwesomeIcon className="fa-sign" icon={faSignInAlt} /> Login
+                    </button>
+                    {error && <p className="error-message">{error}</p>} {/* Display error if exists */}
+                </form>
+                <p className="auth-link">
+                    Don't have an account? <Link to="/register">Register</Link>
+                </p>
+            </div>
         </div>
+        </>
     );
 };
 

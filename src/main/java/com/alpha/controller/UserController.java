@@ -43,6 +43,7 @@ public class UserController {
      * @return A response entity containing the generated token.
      * @throws AuthenticationException if authentication fails.
      */
+
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> generateToken(@RequestBody LoginUser loginUser) throws AuthenticationException {
         final Authentication authentication = authenticationManager.authenticate(
@@ -60,13 +61,20 @@ public class UserController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-        // Return token and role
-        Map<String, String> response = new HashMap<>();
+        // Retrieve user ID
+        String username = loginUser.getUsername();
+        User user = userService.findOne(username); // Fetch user details
+        Long userId = user != null ? user.getId() : null; // Assuming getId() returns the user ID
+
+        // Return token, role, and user ID
+        Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         response.put("role", role);
+        response.put("userId", userId); // Add user ID to the response
 
         return ResponseEntity.ok(response);
     }
+
 
 
     /**
@@ -100,12 +108,6 @@ public class UserController {
     @RequestMapping(value="/userping", method = RequestMethod.GET)
     public String userPing(){
         return "Any User Can Read This";
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @RequestMapping(value="/create/employee", method = RequestMethod.POST)
-    public User createEmployee(@RequestBody UserDto user){
-        return userService.createEmployee(user);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

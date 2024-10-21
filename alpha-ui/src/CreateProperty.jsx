@@ -10,55 +10,45 @@ const CreateProperty = () => {
         price: '',
         isAvailable: false,
     });
-    const [file, setFile] = useState(null); // File state for attachments
+    const [file, setFile] = useState(null);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    const [loading, setLoading] = useState(false); // Loading state
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setProperty({
-            ...property,
+        setProperty((prev) => ({
+            ...prev,
             [name]: type === 'checkbox' ? checked : value,
-        });
+        }));
     };
 
     const handleFileChange = (e) => {
-        setFile(e.target.files[0]); // Set file data for the attachment
+        setFile(e.target.files[0]);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setSuccessMessage('');
-        setLoading(true); // Set loading state
-    
+        setLoading(true);
+
         const formData = new FormData();
-    
-        // Convert the property object into a JSON string and append it to formData
-        formData.append('property', JSON.stringify({
-            name: property.name,
-            type: property.type,
-            address: property.address,
-            description: property.description,
-            price: property.price,
-            isAvailable: property.isAvailable
-        }));
-    
-        // Append the file if one is selected
+        formData.append('property', JSON.stringify(property));
+
         if (file) {
             formData.append('file', file);
         }
-    
+
         try {
-            const token = localStorage.getItem('authToken'); // Use the auth token from local storage
+            const token = localStorage.getItem('authToken');
             const response = await axios.post('http://localhost:8080/api/properties/create', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
-    
+
             setSuccessMessage('Property created successfully!');
             setProperty({
                 name: '',
@@ -68,16 +58,17 @@ const CreateProperty = () => {
                 price: '',
                 isAvailable: false,
             });
-            setFile(null); // Reset file input
+            setFile(null);
         } catch (err) {
             setError('Failed to create property. Please try again.');
             console.error('Error creating property', err);
         } finally {
-            setLoading(false); // Reset loading state
+            setLoading(false);
         }
-    };    
+    };
 
     return (
+        <>
         <div className="create-property-container">
             <h2>Create Property</h2>
             {error && <p className="error">{error}</p>}
@@ -127,7 +118,7 @@ const CreateProperty = () => {
                             value={property.description}
                             onChange={handleChange}
                             required
-                        ></textarea>
+                        />
                     </div>
                     <div>
                         <label htmlFor="price">Price:</label>
@@ -163,6 +154,7 @@ const CreateProperty = () => {
                 </form>
             )}
         </div>
+        </>
     );
 };
 

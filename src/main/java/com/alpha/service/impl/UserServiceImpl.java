@@ -75,23 +75,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public User createEmployee(UserDto user) {
-        User nUser = user.getUserFromDto();
-        nUser.setPassword(bcryptEncoder.encode(user.getPassword()));
-        Role employeeRole = roleService.findByName("EMPLOYEE");
-        Role userRole = roleService.findByName("USER");
-        Set<Role> roleSet = new HashSet<>();
-        if (employeeRole != null) {
-            roleSet.add(employeeRole);
-        }
-        if (userRole != null) {
-            roleSet.add(userRole);
-        }
-        nUser.setRoles(roleSet);
-        return userDao.save(nUser);
-    }
-
-    @Override
     public User getAdminDashboard() {
         String currentUsername = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
         return userDao.findByUsername(currentUsername).orElse(null);
@@ -107,6 +90,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     public String deleteUser(String username) {
         userDao.deleteByUsername(username);
         return "User deleted successfully";
+    }
+    @Override
+    public User findByUsername(String username){
+        String currentUsername = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication().getName();
+        return userDao.findByUsername(currentUsername).orElse(null);
+    }
+
+    @Override
+    public User getUserById(Long id) throws Exception {
+        return userDao.findById(id)
+                .orElseThrow(() -> new Exception("User not found with ID: " + id));
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.alpha.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -28,6 +29,9 @@ public class User {
 
     @Column
     private String name;
+
+    @JsonIgnore // Add this annotation
+    private HibernateProxy hibernateLazyInitializer;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLES",

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import logo from './assets/pms_logo.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignInAlt,faUser } from '@fortawesome/free-solid-svg-icons';
+
 
 const RegistrationForm = () => {
     const [formData, setFormData] = useState({
@@ -39,69 +43,72 @@ const RegistrationForm = () => {
     };
 
     return (
-        <div className="registration-container">
-            <h2>Register</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="username">Username:</label>
+        <>
+         <div className="auth-container">
+            <div className="auth-card">
+                <img src={logo} alt="Logo" className="auth-logo" />
+                <h2 className='auth-title'>Welcome to PMS</h2>
+                <h3 className="auth-title">
+                    <FontAwesomeIcon className='fa-user' icon={faUser} />
+                </h3>
+                <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        id="username"
                         name="username"
                         value={formData.username}
                         onChange={handleChange}
+                        placeholder="Username"
                         required
+                        className="auth-input"
                     />
-                </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
                     <input
                         type="password"
-                        id="password"
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
+                        placeholder="Password"
                         required
+                        className="auth-input"
                     />
-                </div>
-                <div>
-                    <label htmlFor="email">Email:</label>
                     <input
                         type="email"
-                        id="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
+                        placeholder="Email"
                         required
+                        className="auth-input"
                     />
-                </div>
-                <div>
-                    <label htmlFor="phone">Phone:</label>
                     <input
                         type="text"
-                        id="phone"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
+                        placeholder="Phone Number"
                         required
+                        className="auth-input"
                     />
-                </div>
-                <div>
-                    <label htmlFor="name">Name:</label>
                     <input
                         type="text"
-                        id="name"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
+                        placeholder="Name"
                         required
+                        className="auth-input"
                     />
-                </div>
-                <button type="submit">Register</button>
-            </form>
-            {error && <p className="error">{error}</p>}
-            {success && <p className="success">Registration successful! Redirecting to login...</p>}
+                    {error && <p className="error-message">{error}</p>}
+                    {success && <p className="success-message">Registration successful! Redirecting to login...</p>}
+                    <button type="submit" className="auth-button">
+                        <FontAwesomeIcon className="fa-sign" icon={faSignInAlt} /> Register
+                    </button>
+                </form>
+                <p className="auth-link">
+                    Already have an account? <Link to="/login">Login</Link>
+                </p>
+            </div>
         </div>
+        </>
     );
 };
 
